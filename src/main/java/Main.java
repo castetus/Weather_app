@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
         double lat;
@@ -17,10 +15,23 @@ public class Main {
         limit = consoleReader.readLimit();
 
         WeatherApiClient apiClient = new WeatherApiClient();
+        WeatherResponseParser parser = new WeatherResponseParser();
+        WeatherCalculator weatherCalc = new WeatherCalculator();
 
         try {
             String data = apiClient.fetchData(lat, lon, limit);
-            
+            String formattedJson = parser.prettyPrint(data);
+            WeatherResponse parsedResponse = parser.parse(data);
+
+            double factTemp = parsedResponse.fact().temp();
+
+            double avgTemp = weatherCalc.calculateAverageTemp(parsedResponse.forecasts());
+
+            System.out.printf("Текущая температура: %.1f °C%n", factTemp);
+            System.out.printf("Средняя дневная температура: %.1f °C%n", avgTemp);
+
+            System.out.println("\nПолный ответ API:");
+            System.out.println(formattedJson);
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
         }

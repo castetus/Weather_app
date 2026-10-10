@@ -4,8 +4,8 @@ public record WeatherResponse(
         Fact fact,
         List<Forecast> forecasts
 ) {
-    public record Fact(int temp) {}
+    public record Fact(double temp) {}
     public record Forecast(Parts parts) {}
     public record Parts(Day day) {}
-    public record Day(int temp_avg) {}
+    public record Day(double temp_avg) {}
 }
