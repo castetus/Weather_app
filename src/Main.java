@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -15,6 +16,13 @@ public class Main {
         lon = consoleReader.readCoordinate("долготу", -180, 180);
         limit = consoleReader.readLimit();
 
+        WeatherApiClient apiClient = new WeatherApiClient();
 
+        try {
+            String data = apiClient.fetchData(lat, lon, limit);
+            
+        } catch (IOException | InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
