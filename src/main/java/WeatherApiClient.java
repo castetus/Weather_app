@@ -5,13 +5,25 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class WeatherApiClient {
-    private final String BASE_URL = "https://api.weather.yandex.ru/v2/forecast";
-    private String apiKey = System.getenv("YANDEX_API_KEY");
+    private static final String BASE_URL = "https://api.weather.yandex.ru/v2/forecast";
+    private final String apiKey;
+    private final HttpClient client;
+
+    public WeatherApiClient() {
+        this.apiKey = System.getenv("YANDEX_API_KEY");
+
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new IllegalStateException(
+                    "YANDEX_API_KEY is not set"
+            );
+        }
+        this.client = HttpClient.newHttpClient();
+    }
 
     public String fetchData (
             double lat, double lon, int limit
     ) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
+
         URI uri = URI.create(
                 this.BASE_URL
                         + "?lat=" + lat
@@ -19,7 +31,7 @@ public class WeatherApiClient {
                         + "&limit=" + limit
         );
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(String.valueOf(uri)))
+                .uri(uri)
                 .header("X-Yandex-Weather-Key", this.apiKey)
                 .GET()
                 .build();
@@ -28,5 +40,11 @@ public class WeatherApiClient {
                 request,
                 HttpResponse.BodyHandlers.ofString()
         );
+
+        if (response.statusCode() != 200) {
+            throw new IOException("status: " + response.statusCode());
+        }
+
+        return response.body();
     }
 }
