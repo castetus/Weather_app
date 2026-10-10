@@ -28,7 +28,11 @@ public class Main {
             double avgTemp = weatherCalc.calculateAverageTemp(parsedResponse.forecasts());
 
             System.out.printf("Текущая температура: %.1f °C%n", factTemp);
-            System.out.printf("Средняя дневная температура: %.1f °C%n", avgTemp);
+            System.out.printf(
+                    "Средняя дневная температура за %d дней: %.1f °C%n",
+                    parsedResponse.forecasts().size(),
+                    avgTemp
+            );
 
             System.out.println("\nПолный ответ API:");
             System.out.println(formattedJson);
