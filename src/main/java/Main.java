@@ -33,8 +33,9 @@ public class Main {
                     parsedResponse.forecasts().size(),
                     avgTemp
             );
-
             System.out.println("\nПолный ответ API:");
+            System.out.println(data);
+            System.out.println("\nФорматированный ответ API:");
             System.out.println(formattedJson);
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
